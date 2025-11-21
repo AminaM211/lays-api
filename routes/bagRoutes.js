@@ -1,13 +1,19 @@
 import express from "express";
-import { createBag, getBags, getBag, updateBag, deleteBag } from "../controllers/bagController.js";
 import { auth, admin } from "../middleware/auth.js";
+import {
+  createBag,
+  getBags,
+  getBagById,
+  updateBag,
+  deleteBag
+} from "../controllers/bagController.js";
 
 const router = express.Router();
 
-router.post("/", createBag);
-router.get("/", getBags);
-router.get("/:id", getBag);
-router.put("/:id", auth, updateBag);
-router.delete("/:id", auth, admin, deleteBag);
+router.post("/", auth, createBag);         // /bag POST  (token yes)
+router.get("/", getBags);                  // /bag GET   (public)
+router.get("/:id", getBagById);            // /bag/:id GET (public)
+router.put("/:id", auth, updateBag);       // /bag/:id PUT (token yes)
+router.delete("/:id", auth, admin, deleteBag); // /bag/:id DELETE (admin)
 
 export default router;

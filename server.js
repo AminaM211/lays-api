@@ -13,9 +13,12 @@ app.use(express.json());
 // routes
 import bagRoutes from "./routes/bagRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+// import voteRoutes from "./routes/voteRoutes.js";
 
 app.use("/api/v1/bag", bagRoutes);
 app.use("/api/v1/user", userRoutes);
+// app.use("/api/v1/vote", voteRoutes);
+
 
 // connect database + start server
 mongoose
