@@ -1,6 +1,9 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import bagRoutes from "./routes/bagRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import voteRoutes from "./routes/voteRoutes.js";
 import mongoose from "mongoose";
 
 dotenv.config();
@@ -10,14 +13,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// routes
-import bagRoutes from "./routes/bagRoutes.js";
-import userRoutes from "./routes/userRoutes.js";
-// import voteRoutes from "./routes/voteRoutes.js";
-
 app.use("/api/v1/bag", bagRoutes);
 app.use("/api/v1/user", userRoutes);
-// app.use("/api/v1/vote", voteRoutes);
+app.use("/api/v1/vote", voteRoutes);
 
 
 // connect database + start server

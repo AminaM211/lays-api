@@ -8,6 +8,7 @@ const voteSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// één user mag maar één keer op dezelfde bag stemmen
 voteSchema.index({ user: 1, bag: 1 }, { unique: true });
 
 export default mongoose.model("Vote", voteSchema);
