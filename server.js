@@ -1,40 +1,24 @@
-import express from "express";
-import cors from "cors";
 import dotenv from "dotenv";
-import bagRoutes from "./routes/bagRoutes.js";
-import userRoutes from "./routes/userRoutes.js";
-import voteRoutes from "./routes/voteRoutes.js";
-import mongoose from "mongoose";
-
 dotenv.config();
 
-const app = express();
+import mongoose from "mongoose";
+import app from "./src/app.js";
 
-app.use(cors());
-app.use(express.json());
+const PORT = process.env.PORT || 4000;
+const MONGO_URI = process.env.MONGO_URI;
 
-// logging: ZET DIT ERIN
-app.use((req, res, next) => {
-  console.log(req.method, req.url);
-  next();
-});
+async function start() {
+  try {
+    await mongoose.connect(MONGO_URI);
+    console.log("✅ MongoDB connected");
 
-app.get("/test", (req, res) => {
-  return res.json({ msg: "server werkt" });
-});
-
-app.use("/api/v1/bag", bagRoutes);
-app.use("/api/v1/user", userRoutes);
-app.use("/api/v1/vote", voteRoutes);
-
-
-// connect database + start server
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("Database connected");
-    app.listen(process.env.PORT, () => {
-      console.log("API running on port " + process.env.PORT);
+    app.listen(PORT, () => {
+      console.log(`🚀 API running on http://localhost:${PORT}`);
     });
-  })
-  .catch((err) => console.log("DB error:", err));
+  } catch (err) {
+    console.error("❌ MongoDB connection failed:", err.message);
+    process.exit(1);
+  }
+}
+
+start();
