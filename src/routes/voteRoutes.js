@@ -4,6 +4,8 @@ import { addVote, removeVote, getVotes } from "../controllers/voteController.js"
 
 const router = express.Router();
 
+router.post("/", auth, createVote)
+
 // /vote/:bag  POST -> stemmen (token nodig)
 router.post("/:bagId", auth, addVote);
 

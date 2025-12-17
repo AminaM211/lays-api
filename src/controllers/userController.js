@@ -1,59 +1,56 @@
-// controllers/userController.js
-import User from "../models/User.js";
-import jwt from "jsonwebtoken";
+import User from "../models/User.js"
+import jwt from "jsonwebtoken"
 
-// user aanmaken (voor later, nu vooral handig voor andere users)
 export const register = async (req, res) => {
-  console.log("HEADERS:", req.headers["content-type"])
-  console.log("BODY:", req.body)
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password } = req.body
 
-    const existing = await User.findOne({ email });
+    const existing = await User.findOne({ email })
     if (existing) {
-      return res.status(400).json({ message: "Email in use" });
+      return res.status(400).json({ message: "User already exists" })
     }
 
-    // geen bcrypt: plain text opslaan
-    const user = await User.create({
-      name,
-      email,
-      password,
-      role: "user"
-    });
+    const user = await User.create({ name, email, password })
 
-    res.status(201).json(user);
+    res.status(201).json({ message: "User registered" })
   } catch (err) {
-    res.status(500).json({ message: "Register failed", error: err.message });
+    res.status(500).json({ message: "Register failed", error: err.message })
   }
-};
+}
 
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.body
 
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: "User not found" });
+    const user = await User.findOne({ email })
+    if (!user) {
+      return res.status(404).json({ message: "User not found" })
+    }
 
-    // simpel wachtwoord checken
-    if (password !== user.password) {
-      return res.status(400).json({ message: "Wrong password" });
+    const match = await user.comparePassword(password)
+    if (!match) {
+      return res.status(401).json({ message: "Wrong password" })
     }
 
     const token = jwt.sign(
-      { id: user._id, role: user.role, email: user.email },
+      { id: user._id },
       process.env.JWT_SECRET,
-      { expiresIn: "4h" }
-    );
+      { expiresIn: "7d" }
+    )
 
     res.json({
       token,
-      user: { id: user._id, email: user.email, role: user.role }
-    });
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email
+      }
+    })
   } catch (err) {
-    res.status(500).json({ message: "Login failed", error: err.message });
+    res.status(500).json({ message: "Login failed", error: err.message })
   }
-};
+}
+
 
 export const getUser = async (req, res) => {
   try {

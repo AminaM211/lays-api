@@ -9,7 +9,8 @@ export const createBag = async (req, res) => {
       backgroundColor: req.body.backgroundColor,
       image: req.body.image || null,
       backgroundPreset: req.body.backgroundPreset || null,
-      backgroundImage: req.body.backgroundImage || null
+      backgroundImage: req.body.backgroundImage || null,
+      user: req.user._id 
     });
 
     res.status(201).json(bag);

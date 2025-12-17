@@ -5,14 +5,18 @@ const bagSchema = new mongoose.Schema(
     name: String,
     image: { type: String, default: null },
     backgroundPreset: { type: String, default: null },
-  backgroundImage: { type: String, default: null },
+    backgroundImage: { type: String, default: null },
     bagColor: String,
     font: String,
     pattern: String,
     packaging: String,
     inspiration: String,
     keyFlavours: [String],
-    // user: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
+    user: { 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: "User" ,
+      required: true
+    }
   },
   { timestamps: true }
 );
