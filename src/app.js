@@ -1,6 +1,7 @@
 import express from "express"
 import cors from "cors"
 import bagRoutes from "./routes/bagRoutes.js"
+import userRoutes from "./routes/userRoutes.js"
 
 const app = express()
 
@@ -16,5 +17,7 @@ app.use("/uploads", express.static("uploads"))
 
 // 3) Jouw routes
 app.use("/api/v1/bag", bagRoutes)
+app.use("/api/v1/user", userRoutes)
+
 
 export default app

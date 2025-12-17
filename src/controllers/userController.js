@@ -4,8 +4,10 @@ import jwt from "jsonwebtoken";
 
 // user aanmaken (voor later, nu vooral handig voor andere users)
 export const register = async (req, res) => {
+  console.log("HEADERS:", req.headers["content-type"])
+  console.log("BODY:", req.body)
   try {
-    const { firstName, lastName, email, password } = req.body;
+    const { name, email, password } = req.body;
 
     const existing = await User.findOne({ email });
     if (existing) {
@@ -14,8 +16,7 @@ export const register = async (req, res) => {
 
     // geen bcrypt: plain text opslaan
     const user = await User.create({
-      firstName,
-      lastName,
+      name,
       email,
       password,
       role: "user"
