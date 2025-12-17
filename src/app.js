@@ -1,18 +1,15 @@
-import express from "express";
-import cors from "cors";
+import express from "express"
+import cors from "cors"
+import bagRoutes from "./routes/bagRoutes.js"
 
-import bagRoutes from "../routes/bagRoutes.js";
-import userRoutes from "../routes/userRoutes.js";
-import voteRoutes from "../routes/voteRoutes.js";
+const app = express()
 
-const app = express();
+app.use(cors())
+app.use(express.json())
 
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// serve uploaded files
+app.use("/uploads", express.static("uploads"))
 
-app.use("/api/v1/bag", bagRoutes);
-app.use("/api/v1/user", userRoutes);
-app.use("/api/v1/vote", voteRoutes);
+app.use("/api/v1/bag", bagRoutes)
 
-export default app;
+export default app

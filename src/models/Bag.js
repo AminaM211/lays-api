@@ -10,7 +10,7 @@ const bagSchema = new mongoose.Schema(
     packaging: String,
     inspiration: String,
     keyFlavours: [String],
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
+    // user: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
   },
   { timestamps: true }
 );
