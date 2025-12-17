@@ -3,7 +3,9 @@ import mongoose from "mongoose";
 const bagSchema = new mongoose.Schema(
   {
     name: String,
-    image: String,
+    image: { type: String, default: null },
+    backgroundPreset: { type: String, default: null },
+  backgroundImage: { type: String, default: null },
     bagColor: String,
     font: String,
     pattern: String,

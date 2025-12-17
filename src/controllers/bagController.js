@@ -2,18 +2,14 @@ import Bag from "../models/Bag.js";
 
 export const createBag = async (req, res) => {
   try {
-    const image = req.files?.image?.[0]?.path || null;
-    const backgroundImage = req.files?.backgroundImage?.[0]?.path || null;
-
     const bag = await Bag.create({
       name: req.body.name,
       bagColor: req.body.bagColor,
-      keyFlavours: Array.isArray(req.body.keyFlavours)
-      ? req.body.keyFlavours
-      : JSON.parse(req.body.keyFlavours || "[]"),
+      keyFlavours: req.body.keyFlavours,
       backgroundColor: req.body.backgroundColor,
-      image,
-      backgroundImage
+      image: req.body.image || null,
+      backgroundPreset: req.body.backgroundPreset || null,
+      backgroundImage: req.body.backgroundImage || null
     });
 
     res.status(201).json(bag);
@@ -21,6 +17,8 @@ export const createBag = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+
 
 
 export const getBags = async (req, res) => {
