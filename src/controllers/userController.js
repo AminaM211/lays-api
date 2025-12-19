@@ -40,8 +40,17 @@ export const login = async (req, res) => {
       { expiresIn: "7d" }
     )
 
+    const isProd = process.env.NODE_ENV === "production"
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
+      path: "/"
+    })
+
+    
     res.json({
-      token,
       user: {
         id: user._id,
         name: user.name,
@@ -49,6 +58,7 @@ export const login = async (req, res) => {
         role: user.role
       }
     })
+    
   } catch (err) {
     console.error("LOGIN ERROR:", err)
     res.status(500).json({
