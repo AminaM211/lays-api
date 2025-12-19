@@ -16,7 +16,7 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }))
 app.use("/uploads", express.static("uploads"))
 
 // routes
-app.use("/api/v1/bag", bagRoutes)
+app.use("/api/v1", bagRoutes)
 app.use("/api/v1/user", userRoutes)
 app.use("/api/v1/vote", voteRoutes)
 app.use("/api/v1/auth", authRoutes)

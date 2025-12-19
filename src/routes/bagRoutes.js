@@ -1,32 +1,26 @@
-import express from "express";
-import { auth, admin } from "../middleware/auth.js";
+import express from "express"
+import { auth, admin } from "../middleware/auth.js"
 import {
   createBag,
   getBags,
   getBagById,
   updateBag,
-  deleteBag
-} from "../controllers/bagController.js";
-import { upload } from "../middleware/upload.js";
+  deleteBag,
+  getMyBags
+} from "../controllers/bagController.js"
 
+const router = express.Router()
 
-const router = express.Router();
+// CREATE
+router.post("/bag", auth, createBag)
 
-router.post("/", auth, createBag);         // /bag POST  (token yes)
-router.get("/", getBags);                  // /bag GET   (public)
-router.get("/:id", getBagById);            // /bag/:id GET (public)
-router.put("/:id", auth, updateBag);       // /bag/:id PUT (token yes)
-router.delete("/:id", auth, admin, deleteBag); // /bag/:id DELETE (admin)
+// READ
+router.get("/bag", getBags)              // ✅ ALLE designs
+router.get("/bag/mine", auth, getMyBags) // ✅ MIJN designs
+router.get("/bag/:id", getBagById)
 
-router.get("/admin/all", auth, admin, getBags)
+// UPDATE / DELETE
+router.put("/bag/:id", auth, updateBag)
+router.delete("/bag/:id", auth, admin, deleteBag)
 
-router.post(
-  "/",
-  upload.fields([
-    { name: "image", maxCount: 1 },
-    { name: "backgroundImage", maxCount: 1 }
-  ]),
-  createBag
-);
-
-export default router;
+export default router

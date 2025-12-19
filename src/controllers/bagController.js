@@ -1,6 +1,10 @@
 import Bag from "../models/Bag.js";
 
 export const createBag = async (req, res) => {
+  console.log("CREATE BAG HIT")
+  console.log("REQ.USER:", req.user)
+  console.log("BODY:", req.body)
+  
   try {
     const bag = await Bag.create({
       name: req.body.name,
@@ -18,9 +22,6 @@ export const createBag = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
-
-
 
 export const getBags = async (req, res) => {
   const bags = await Bag.find();
@@ -43,3 +44,24 @@ export const deleteBag = async (req, res) => {
   await Bag.findByIdAndDelete(req.params.id);
   res.json({ message: "Bag deleted" });
 };
+
+export const getMyBags = async (req, res) => {
+  try {
+    const bags = await Bag.find({ user: req.user._id })
+    res.json(bags)
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch bags" })
+  }
+}
+
+export const getAllBags = async (req, res) => {
+  try {
+    const bags = await Bag.find()
+      .populate("user", "name")
+
+    res.json(bags)
+  } catch (err) {
+    console.error("GET ALL BAGS ERROR:", err)
+    res.status(500).json({ message: "Failed to fetch bags" })
+  }
+}
