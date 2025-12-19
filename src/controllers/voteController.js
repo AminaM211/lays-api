@@ -1,11 +1,20 @@
-import Vote from "../src/models/Vote.js";
+import Vote from "../models/Vote.js";
+import Bag from "../models/Bag.js"
 
 export const addVote = async (req, res) => {
+  console.log("REQ.USER:", req.user)
+
   try {
     const bagId = req.params.bagId;
-    const userId = req.user.id;
+    const userId = req.user._id;
 
-    const vote = await Vote.create({ user: userId, bag: bagId });
+    const vote = await Vote.create({ 
+      user: userId, 
+      bag: bagId 
+    });
+    await Bag.findByIdAndUpdate(bagId, {
+      $inc: { votes: 1 }
+    });
     res.status(201).json(vote);
   } catch (err) {
     // duplicate key -> user heeft al gestemd
@@ -38,3 +47,8 @@ export const getVotes = async (req, res) => {
     res.status(500).json({ message: "Get votes failed", error: err.message });
   }
 };
+
+export const getVotesForBag = async (req, res) => {
+  const votes = await Vote.countDocuments({ bag: req.params.bagId })
+  res.json({ votes })
+}

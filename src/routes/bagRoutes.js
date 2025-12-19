@@ -18,6 +18,8 @@ router.get("/:id", getBagById);            // /bag/:id GET (public)
 router.put("/:id", auth, updateBag);       // /bag/:id PUT (token yes)
 router.delete("/:id", auth, admin, deleteBag); // /bag/:id DELETE (admin)
 
+router.get("/admin/all", auth, admin, getBags)
+
 router.post(
   "/",
   upload.fields([

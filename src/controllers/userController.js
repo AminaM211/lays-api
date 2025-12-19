@@ -23,11 +23,13 @@ export const login = async (req, res) => {
     const { email, password } = req.body
 
     const user = await User.findOne({ email })
+
     if (!user) {
       return res.status(404).json({ message: "User not found" })
     }
 
     const match = await user.comparePassword(password)
+
     if (!match) {
       return res.status(401).json({ message: "Wrong password" })
     }
@@ -43,13 +45,19 @@ export const login = async (req, res) => {
       user: {
         id: user._id,
         name: user.name,
-        email: user.email
+        email: user.email,
+        role: user.role
       }
     })
   } catch (err) {
-    res.status(500).json({ message: "Login failed", error: err.message })
+    console.error("LOGIN ERROR:", err)
+    res.status(500).json({
+      message: "Login failed",
+      error: err.message
+    })
   }
 }
+
 
 
 export const getUser = async (req, res) => {
