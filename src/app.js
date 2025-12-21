@@ -13,8 +13,8 @@ app.use(cookieParser())
 app.use(
   cors({
     origin: [
-      "https://lays-configurator-vert.vercel.app/",
-      "https://lays-vue.vercel.app/" 
+      "https://lays-configurator-vert.vercel.app",
+      "https://lays-vue.vercel.app" 
     ],
     credentials: true
   })
