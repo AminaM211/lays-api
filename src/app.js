@@ -29,7 +29,6 @@ app.use("/uploads", express.static("uploads"))
 app.use("/api/v1", bagRoutes)
 app.use("/api/v1/user", userRoutes)
 app.use("/api/v1/vote", voteRoutes)
-app.use("/api/v1/bag/mine", bagRoutes)
 
 
 export default app
