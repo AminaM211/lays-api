@@ -1,14 +1,19 @@
 import dotenv from "dotenv"
 import mongoose from "mongoose"
-import config from "config"
 import app from "./src/app.js"
 
 dotenv.config()
 
-const PORT = 4000
-const mongoURI = config.get("db.uri") || process.env.MONGO_URI
+const PORT = process.env.PORT || 4000
+const mongoURI = process.env.MONGO_URI
 
-mongoose.connect(mongoURI)
+if (!mongoURI) {
+  console.error("❌ MONGO_URI missing")
+  process.exit(1)
+}
+
+mongoose
+  .connect(mongoURI)
   .then(() => {
     console.log("✅ MongoDB connected")
 
@@ -17,6 +22,6 @@ mongoose.connect(mongoURI)
     })
   })
   .catch(err => {
-    console.error("❌ MongoDB error", err)
+    console.error("❌ MongoDB error:", err.message)
     process.exit(1)
   })
