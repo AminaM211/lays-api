@@ -1,17 +1,17 @@
-import express from "express";
-import { auth, admin } from "../middleware/auth.js";
-import { addVote, removeVote, getVotes, getVotesForBag } from "../controllers/voteController.js";
+import express from "express"
+import { auth, admin } from "../middleware/auth.js"
+import {
+  addVote,
+  removeVote,
+  getVotes,
+  getVotesForBag
+} from "../controllers/voteController.js"
 
-const router = express.Router();
+const router = express.Router()
 
-// /vote/:bag  POST -> stemmen (token nodig)
-router.post("/", auth, addVote);
+router.post("/:bagId", auth, addVote)
+router.delete("/:bagId", auth, removeVote)
+router.get("/", getVotes)
+router.get("/:bagId", getVotesForBag)
 
-// /vote/:bag  DELETE -> stem weghalen (token nodig)
-router.delete("/:bagId", removeVote);
-
-// /vote GET -> overzicht alle votes (admin)
-router.get("/", admin, getVotes);
-router.get("/:bagId", getVotesForBag);
-
-export default router;
+export default router

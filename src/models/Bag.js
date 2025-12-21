@@ -7,10 +7,8 @@ const bagSchema = new mongoose.Schema(
     backgroundPreset: { type: String, default: null },
     backgroundImage: { type: String, default: null },
     bagColor: String,
-    font: String,
-    pattern: String,
-    packaging: String,
-    inspiration: String,
+    font: { type: String, default: "Helvetica" }, 
+    votes: { type: Number, default: 0 }, 
     keyFlavours: [String],
     user: { 
       type: mongoose.Schema.Types.ObjectId, 
