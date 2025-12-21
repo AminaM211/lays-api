@@ -14,7 +14,7 @@ app.use(
   cors({
     origin: [
       "https://lays-configurator-vert.vercel.app",
-      "https://lays-vue.vercel.app" 
+      "https://lays-vue-2.vercel.app" 
     ],
     credentials: true
   })
