@@ -30,7 +30,10 @@ io.on("connection", (socket) => {
     try {
       const bag = await Bag.findById(bagId)
       if (!bag) return
-
+  
+      // 🔧 FIX: voters altijd initialiseren
+      if (!bag.voters) bag.voters = []
+  
       const userIdStr = userId.toString()
       const voters = bag.voters.map(v => v.toString())
       const index = voters.indexOf(userIdStr)
@@ -38,14 +41,14 @@ io.on("connection", (socket) => {
       if (action === "vote" && index === -1) {
         bag.voters.push(userId)
       }
-
+  
       if (action === "unvote" && index !== -1) {
         bag.voters.splice(index, 1)
       }
-
+  
       bag.votes = bag.voters.length
       await bag.save()
-
+  
       io.emit("vote:update", {
         bagId,
         votes: bag.votes,
@@ -55,6 +58,7 @@ io.on("connection", (socket) => {
       console.error("Vote error:", err)
     }
   })
+  
 })
 
 mongoose.connect(process.env.MONGO_URI).then(() => {
