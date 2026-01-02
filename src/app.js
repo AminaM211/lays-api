@@ -26,6 +26,6 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use("/api/v1/bag", bagRoutes)
 app.use("/api/v1/user", userRoutes)
-app.use("/api/v1/vote", voteRoutes)
+// app.use("/api/v1/vote", voteRoutes)
 
 export default app

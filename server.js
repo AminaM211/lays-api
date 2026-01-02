@@ -31,8 +31,10 @@ io.on("connection", (socket) => {
       const bag = await Bag.findById(bagId)
       if (!bag) return
 
-      const index = bag.voters.indexOf(userId)
-
+      const userIdStr = userId.toString()
+      const voters = bag.voters.map(v => v.toString())
+      const index = voters.indexOf(userIdStr)
+  
       if (action === "vote" && index === -1) {
         bag.voters.push(userId)
       }
@@ -46,7 +48,8 @@ io.on("connection", (socket) => {
 
       io.emit("vote:update", {
         bagId,
-        votes: bag.votes
+        votes: bag.votes,
+        voters: bag.voters
       })
     } catch (err) {
       console.error("Vote error:", err)
