@@ -19,7 +19,7 @@ export const createBag = async (req, res) => {
   }
 };
 
-import Vote from "../models/Vote.js"
+// import Vote from "../models/Vote.js"
 
 export const getBags = async (req, res) => {
   const userId = req.user?._id
