@@ -56,7 +56,7 @@ const io = new Server(httpServer, {
 io.on("connection", (socket) => {
   console.log("🟢 socket connected:", socket.id)
 
-  socket.on("vote", async ({ bagId, userId }) => {
+  socket.on("vote", async ({ bagId, userId, action }) => {
     try {
       const bag = await Bag.findById(bagId)
       if (!bag) return
@@ -66,17 +66,18 @@ io.on("connection", (socket) => {
       if (action === "vote") {
         if (index === -1) {
           bag.voters.push(userId)
-          bag.votes = bag.voters.length
-          await bag.save()
-        }
-      } else if (action === "unvote") {
-        if (index !== -1) {
-          bag.voters.splice(index, 1)
-          bag.votes = bag.voters.length
-          await bag.save()
         }
       }
-      
+
+      if (action === "unvote") {
+        if (index !== -1) {
+          bag.voters.splice(index, 1)
+        }
+      }
+
+      bag.votes = bag.voters.length
+      await bag.save()
+
       io.emit("vote:update", {
         bagId,
         votes: bag.votes
@@ -86,8 +87,6 @@ io.on("connection", (socket) => {
     }
   })
 })
-
-
 
 // ─────────────────────────
 // START SERVER
