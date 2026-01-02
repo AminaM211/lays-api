@@ -20,7 +20,10 @@ const io = new Server(httpServer, {
       "https://lays-configurator-vert.vercel.app"
     ],
     credentials: true
-  }
+  },
+  allowEIO3: true,
+  transports: ["polling"]
+
 })
 
 io.on("connection", (socket) => {
