@@ -24,43 +24,43 @@ const io = new Server(httpServer, {
 })
 
 io.on("connection", (socket) => {
-  console.log("🟢 socket connected:", socket.id)
-
-  socket.on("vote", async ({ bagId, userId, action }) => {
-    try {
-      const bag = await Bag.findById(bagId)
-      if (!bag) return
+    socket.on("vote", async ({ bagId, action }) => {
+      try {
+        // ❗ userId uit cookie-session halen
+        const userId = socket.handshake.auth?.userId
+        if (!userId) return
   
-      // 🔧 FIX: voters altijd initialiseren
-      if (!bag.voters) bag.voters = []
+        const bag = await Bag.findById(bagId)
+        if (!bag) return
   
-      const userIdStr = userId.toString()
-      const voters = bag.voters.map(v => v.toString())
-      const index = voters.indexOf(userIdStr)
+        if (!bag.voters) bag.voters = []
   
-      if (action === "vote" && index === -1) {
-        bag.voters.push(userId)
+        const index = bag.voters
+          .map(v => v.toString())
+          .indexOf(userId.toString())
+  
+        if (action === "vote" && index === -1) {
+          bag.voters.push(userId)
+        }
+  
+        if (action === "unvote" && index !== -1) {
+          bag.voters.splice(index, 1)
+        }
+  
+        bag.votes = bag.voters.length
+        await bag.save()
+  
+        io.emit("vote:update", {
+          bagId,
+          votes: bag.votes,
+          voters: bag.voters
+        })
+      } catch (err) {
+        console.error("Vote error:", err)
       }
-  
-      if (action === "unvote" && index !== -1) {
-        bag.voters.splice(index, 1)
-      }
-  
-      bag.votes = bag.voters.length
-      await bag.save()
-  
-      io.emit("vote:update", {
-        bagId,
-        votes: bag.votes,
-        voters: bag.voters
-      })
-    } catch (err) {
-      console.error("Vote error:", err)
-    }
+    })
   })
-  
-})
-
+ 
 mongoose.connect(process.env.MONGO_URI).then(() => {
   console.log("✅ MongoDB connected")
   httpServer.listen(PORT, () => {
