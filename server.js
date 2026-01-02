@@ -20,7 +20,9 @@ const io = new Server(httpServer, {
       "https://lays-configurator-vert.vercel.app"
     ],
     credentials: true
-  }
+  },
+  transports: ["polling"] // 🔴 GEEN websocket
+
 })
 
 io.on("connection", (socket) => {
