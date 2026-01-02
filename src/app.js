@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser"
 
 import bagRoutes from "./routes/bagRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
-import voteRoutes from "./routes/voteRoutes.js"
+// import voteRoutes from "./routes/voteRoutes.js"
 
 const app = express()
 
