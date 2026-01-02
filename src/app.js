@@ -33,12 +33,12 @@ app.use(express.urlencoded({ extended: true }))
 // ─────────────────────────
 // ROUTES
 // ─────────────────────────
-app.use("/api/v1/bag", bagRoutes)
+app.use("/api/v1", bagRoutes)
 app.use("/api/v1/user", userRoutes)
 app.use("/api/v1/vote", voteRoutes)
 
 // ─────────────────────────
-// HTTP + SOCKET SERVER
+// SOCKET.IO
 // ─────────────────────────
 const httpServer = createServer(app)
 
@@ -53,48 +53,41 @@ const io = new Server(httpServer, {
   }
 })
 
-// ─────────────────────────
-// SOCKET LOGIC (VOTE / UNVOTE)
-// ─────────────────────────
 io.on("connection", (socket) => {
   console.log("🟢 socket connected:", socket.id)
 
-  socket.on("vote", async ({ bagId, userId, action }) => {
+  socket.on("vote", async ({ bagId, userId }) => {
     try {
       const bag = await Bag.findById(bagId)
       if (!bag) return
 
-      if (!bag.voters) bag.voters = []
+      const index = bag.voters.indexOf(userId)
 
-      const alreadyVoted = bag.voters.includes(userId)
-
-      // ───── VOTE
-      if (action === "vote" && !alreadyVoted) {
-        bag.voters.push(userId)
+      if (action === "vote") {
+        if (index === -1) {
+          bag.voters.push(userId)
+          bag.votes = bag.voters.length
+          await bag.save()
+        }
+      } else if (action === "unvote") {
+        if (index !== -1) {
+          bag.voters.splice(index, 1)
+          bag.votes = bag.voters.length
+          await bag.save()
+        }
       }
-
-      // ───── UNVOTE
-      if (action === "unvote" && alreadyVoted) {
-        bag.voters = bag.voters.filter(id => id.toString() !== userId)
-      }
-
-      bag.votes = bag.voters.length
-      await bag.save()
-
-      // broadcast to all clients
+      
       io.emit("vote:update", {
         bagId,
         votes: bag.votes
       })
     } catch (err) {
-      console.error("❌ Vote socket error:", err)
+      console.error("Vote socket error:", err)
     }
   })
-
-  socket.on("disconnect", () => {
-    console.log("🔴 socket disconnected:", socket.id)
-  })
 })
+
+
 
 // ─────────────────────────
 // START SERVER
