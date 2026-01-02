@@ -1,5 +1,5 @@
 import express from "express"
-import { auth, admin } from "../middleware/auth.js"
+import { auth } from "../middleware/auth.js"
 import {
   createBag,
   getBags,
@@ -12,12 +12,12 @@ import {
 const router = express.Router()
 
 // CREATE
-router.post("/bag", auth, createBag)
+router.post("/", auth, createBag)
 
 // READ
-router.get("/bag", getBags)              // ✅ ALLE designs
-router.get("/bag/mine", auth, getMyBags) // ✅ MIJN designs
-router.get("/bag/:id", getBagById)
+router.get("/", getBags)          // /api/v1/bag
+router.get("/mine", auth, getMyBags) // /api/v1/bag/mine
+router.get("/:id", getBagById)
 
 // UPDATE / DELETE
 router.put("/:id", auth, updateBag)
