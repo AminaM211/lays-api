@@ -24,41 +24,36 @@ const io = new Server(httpServer, {
 })
 
 io.on("connection", (socket) => {
-    socket.on("vote", async ({ bagId, action }) => {
-      try {
-        // ❗ userId uit cookie-session halen
-        const userId = socket.handshake.auth?.userId
-        if (!userId) return
+  socket.on("vote", async ({ bagId, userId, action }) => {
+    console.log("🔥 vote", bagId, userId, action)
   
-        const bag = await Bag.findById(bagId)
-        if (!bag) return
+    const bag = await Bag.findById(bagId)
+    if (!bag) return
   
-        if (!bag.voters) bag.voters = []
+    if (!bag.voters) bag.voters = []
   
-        const index = bag.voters
-          .map(v => v.toString())
-          .indexOf(userId.toString())
+    const index = bag.voters
+      .map(v => v.toString())
+      .indexOf(userId)
   
-        if (action === "vote" && index === -1) {
-          bag.voters.push(userId)
-        }
+    if (action === "vote" && index === -1) {
+      bag.voters.push(userId)
+    }
   
-        if (action === "unvote" && index !== -1) {
-          bag.voters.splice(index, 1)
-        }
+    if (action === "unvote" && index !== -1) {
+      bag.voters.splice(index, 1)
+    }
   
-        bag.votes = bag.voters.length
-        await bag.save()
+    bag.votes = bag.voters.length
+    await bag.save()
   
-        io.emit("vote:update", {
-          bagId,
-          votes: bag.votes,
-          voters: bag.voters
-        })
-      } catch (err) {
-        console.error("Vote error:", err)
-      }
+    io.emit("vote:update", {
+      bagId,
+      votes: bag.votes,
+      voters: bag.voters
     })
+  })
+  
   })
  
 mongoose.connect(process.env.MONGO_URI).then(() => {
