@@ -22,17 +22,14 @@ export const createBag = async (req, res) => {
 // import Vote from "../models/Vote.js"
 
 export const getBags = async (req, res) => {
-  const userId = req.user?._id
-
-  const bags = await Bag.find().populate("user", "name")
-
-  if (!userId) return res.json(bags)
-
-  const votes = await Vote.find({ user: userId }).select("bag")
-  const votedBagIds = votes.map(v => v.bag.toString())
-  this.allBags = bags
-
+  try {
+    const bags = await Bag.find().populate("user", "name")
+    res.json(bags)
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch bags" })
+  }
 }
+
 
 
 
