@@ -21,7 +21,7 @@ const io = new Server(httpServer, {
     ],
     credentials: false
   },
-  transports: ["websocket"]
+  transports: ["polling", "websocket"]
 })
 
 
