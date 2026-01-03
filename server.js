@@ -19,6 +19,7 @@ const io = new Server(httpServer, {
       "https://lays-vue-2.vercel.app",
       "https://lays-configurator-vert.vercel.app"
     ],
+    methods: ["GET", "POST"],
     credentials: false
   },
   transports: ["polling", "websocket"]
