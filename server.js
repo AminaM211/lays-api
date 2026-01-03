@@ -19,9 +19,8 @@ const io = new Server(httpServer, {
       "https://lays-vue-2.vercel.app",
       "https://lays-configurator-vert.vercel.app"
     ],
-    credentials: false
-  },
-  transports: ["websocket"]
+    credentials: true
+  }
 })
 
 
