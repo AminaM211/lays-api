@@ -12,27 +12,18 @@ const PORT = process.env.PORT || 4000
 
 const httpServer = createServer(app)
 
-// const io = new Server(httpServer, {
-//   cors: {
-//     origin: [
-//       "http://localhost:5173",
-//       "https://lays-vue-2.vercel.app",
-//       "https://lays-configurator-vert.vercel.app"
-//     ],
-//     credentials: true
-//   },
-//   allowEIO3: true,
-//   transports: ["polling"]
-
-// })
-
 const io = new Server(httpServer, {
   cors: {
-    origin: "*",          // 🔴 belangrijk
-    methods: ["GET", "POST"]
+    origin: [
+      "http://localhost:5173",
+      "https://lays-vue-2.vercel.app",
+      "https://lays-configurator-vert.vercel.app"
+    ],
+    credentials: false
   },
-  transports: ["polling"]
+  transports: ["websocket"]
 })
+
 
 io.on("connection", (socket) => {
   socket.on("vote", async ({ bagId, userId, action }) => {
